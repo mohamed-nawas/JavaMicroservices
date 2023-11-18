@@ -1,0 +1,16 @@
+## servlet configuration
+server:
+  port: ${PORT:8761}
+
+## eureka server configuration
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://44.202.3.192:8761/eureka}
+
+## application configurations
+spring:
+  application:
+    name: ${APPLICATION_NAME:ignite-discovery-service}

@@ -1,0 +1,54 @@
+## servlet configuration
+server:
+  port: ${PORT:8083}
+
+## application configuration
+spring:
+  application:
+    name: ${APPLICATION_NAME:ignite-payment-service}
+  datasource:
+    url: jdbc:mysql://localhost:3306/payment_db?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+  ## configure active profiles
+  # profiles:
+  #   active: prod
+
+## eureka server configuration
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka}
+
+# oauth2 security configuration
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://localhost:8080/ignite-auth-service/oauth/check_token
+    client:
+      client-id: ignite-client
+      client-secret: 1234
+
+# oauth2 resource server configuration
+oauth:
+  resource-id: ${RESOURCE_ID:ignite_payment}
+
+## logging level
+logging:
+  level:
+    com.swivel.ignite.payment: ${LOG_LEVEL:DEBUG}
+  file:
+    path: ${LOGPATH:D:\Swivel_Projects\Ignite\Project 1\backend\ignite_payment\logs}
+
+## Student-Microservice
+student:
+  baseUrl: ${STUDENT_BASE_URL:http://localhost:8080/ignite-student-service}
+  studentInfoUrl: /api/v1/student/get/{studentId}

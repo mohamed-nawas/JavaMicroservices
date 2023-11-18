@@ -1,0 +1,55 @@
+## servlet configuration
+server:
+  port: ${PORT:8079}
+
+## application configuration
+spring:
+  application:
+    name: ignite-auth-service
+  datasource:
+    url: jdbc:mysql://44.214.182.158:3306/ignite_auth_db?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:user}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    user: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:user}
+    baseline-version: 0
+    baseline-description: "init db migration"
+
+## eureka server configuration
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL:http://44.202.3.192:8761/eureka}
+
+
+## oauth2 security configuration
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://3.83.253.64:8080/ignite-auth-service/oauth/check_token
+    client:
+      client-id: ignite-client
+      client-secret: 1234
+    link: http://authserver_address:8079
+
+# oauth2 resource server configuration
+oauth:
+  resource-id: ${RESOURCE_ID:ignite_auth}
+
+## logging level
+logging:
+  level:
+    com.swivel.ignite.auth: ${LOG_LEVEL:DEBUG}
+  file:
+    path: ${LOGPATH:/home/ubuntu}

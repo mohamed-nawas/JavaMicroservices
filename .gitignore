@@ -1,0 +1,9 @@
+.vscode/
+.idea/
+ignite_project_api_gateway/target/
+ignite_project_auth_service-/target/
+ignite_project_discovery/target/
+ignite_project_payment_service/target/
+ignite_project_reporting_service/target/
+ignite_project_student_service/target/
+ignite_project_tuition_service/target/
