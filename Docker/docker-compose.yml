@@ -1,0 +1,89 @@
+version: '3.8'
+
+# services
+services:
+  # mysql container
+  mysql:
+    container_name: mysql
+    image: mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    networks:
+      ignite:
+
+  # discovery service container
+  discovery:
+    container_name: discovery
+    build:
+      context: ../ignite_project_discovery
+      dockerfile: Dockerfile
+    ports:
+      - 8761:8761
+    networks:
+      ignite:
+
+  # api-gateway service container
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ../ignite_project_api_gateway
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8761
+    networks:
+      ignite:
+
+  # auth service container
+  auth:
+    container_name: auth
+    build:
+      context: ../ignite_project_auth_service-
+      dockerfile: Dockerfile
+    ports:
+      - 8079:8079
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PWD=password
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8761
+      - API_GW_HOST=api-gateway
+      - API_GW_PORT=8080
+      - AUTH_HOST=auth
+      - AUTH_PORT=8079
+    networks:
+      ignite:
+
+  # student service container
+  student:
+    container_name: student
+    build:
+      context: ../ignite_project_student_service
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PWD=password
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8761
+      - API_GW_HOST=api-gateway
+      - API_GW_PORT=8080
+    networks:
+      ignite:
+
+# network
+networks:
+  ignite:
