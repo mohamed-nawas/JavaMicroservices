@@ -1,15 +1,21 @@
-version: '3.8'
+version: '3.9'
 
 # services
 services:
   # mysql container
   mysql:
     container_name: mysql
-    image: mysql
+    image: mysql:8.0.35
     ports:
       - 3307:3306
     environment:
+      - MYSQL_DATABASE=test
       - MYSQL_ROOT_PASSWORD=password
+    healthcheck:
+      test: "mysql -uroot -p$$MYSQL_ROOT_PASSWORD test -e 'select 1'"
+      interval: 5m
+      timeout: 10m
+      retries: 3
     networks:
       ignite:
 
@@ -47,7 +53,8 @@ services:
     ports:
       - 8079:8079
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
@@ -71,7 +78,8 @@ services:
     ports:
       - 8081:8081
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_PORT=3306
