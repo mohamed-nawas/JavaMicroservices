@@ -115,6 +115,52 @@ services:
     networks:
       ignite:
 
+  # payment service container
+  payment:
+    container_name: payment
+    build:
+      context: ../ignite_project_payment_service
+      dockerfile: Dockerfile
+    ports:
+      - 8083:8083
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PWD=password
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8761
+      - API_GW_HOST=api-gateway
+      - API_GW_PORT=8080
+    networks:
+      ignite:
+
+  # reporting service container
+  reporting:
+    container_name: reporting
+    build:
+      context: ../ignite_project_reporting_service
+      dockerfile: Dockerfile
+    ports:
+      - 8084:8084
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PWD=password
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8761
+      - API_GW_HOST=api-gateway
+      - API_GW_PORT=8080
+    networks:
+      ignite:
+
 # network
 networks:
   ignite:
