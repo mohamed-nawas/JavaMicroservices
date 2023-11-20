@@ -1,0 +1,11 @@
+# Defines Persistent volume claim (PVC) storage for MySQL server
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi

@@ -1,0 +1,62 @@
+# Mysql server deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0.35
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: mysql-root-pwd
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: MYSQL_PWD
+            # - name: MYSQL_DATA
+            #   value: /var/opt/mysql/data/mysqldata
+          volumeMounts:
+            - name: mysqldb
+              mountPath: /var/opt/mysql/data
+      volumes:
+        - name: mysqldb
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+  # 'mysql-deploy' app pointer
+    app: mysql
+  ports:
+    - name: mysql
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
