@@ -1,0 +1,33 @@
+# Ignite student service deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student
+  template:
+    metadata:
+      labels:
+        app: student
+    spec:
+      containers:
+        - name: student
+          image: mohamednawaz/ignite-student:latest
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: student
+  ports:
+    - name: student
+      port: 8081
+      targetPort: 8081

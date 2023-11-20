@@ -1,0 +1,33 @@
+# Ignite payment service deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: mohamednawaz/ignite-payment:latest
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: payment
+  ports:
+    - name: payment
+      port: 8083
+      targetPort: 8083

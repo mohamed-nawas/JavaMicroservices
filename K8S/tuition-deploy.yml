@@ -1,0 +1,33 @@
+# Ignite tuition service deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tuition-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tuition
+  template:
+    metadata:
+      labels:
+        app: tuition
+    spec:
+      containers:
+        - name: tuition
+          image: mohamednawaz/ignite-tuition:latest
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tuition-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: tuition
+  ports:
+    - name: tuition
+      port: 8082
+      targetPort: 8082

@@ -1,0 +1,33 @@
+# Ignite reporting service deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reporting-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reporting
+  template:
+    metadata:
+      labels:
+        app: reporting
+    spec:
+      containers:
+        - name: reporting
+          image: mohamednawaz/ignite-reporting:latest
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reporting-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: reporting
+  ports:
+    - name: reporting
+      port: 8084
+      targetPort: 8084

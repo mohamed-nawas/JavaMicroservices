@@ -1,0 +1,49 @@
+# Ignite discovery service deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery
+  template:
+    metadata:
+      labels:
+        app: discovery
+    spec:
+      containers:
+        - name: discovery
+          image: mohamednawaz/ignite-discovery:latest
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: discovery
+  ports:
+    - name: discovery
+      port: 8761
+      targetPort: 8761
+
+# NodePort config for external communication to discovery service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-np-srv
+spec:
+  type: NodePort
+  selector:
+    app: discovery
+  ports:
+    - name: discovery
+      protocol: TCP
+      port: 8761
+      targetPort: 8761
