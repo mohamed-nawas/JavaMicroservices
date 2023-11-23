@@ -21,9 +21,9 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: mysql-config-map
-                  key: mysql-root-pwd
+                secretKeyRef:
+                  name: mysql
+                  key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
@@ -53,7 +53,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-  # 'mysql-deploy' app pointer
+    # 'mysql-deploy' app pointer
     app: mysql
   ports:
     - name: mysql

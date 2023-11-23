@@ -16,6 +16,17 @@ spec:
       containers:
         - name: api-gateway
           image: mohamednawaz/ignite-api-gateway:latest
+          env:
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: eureka-host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: eureka-port
 
 # Cluster IP config
 ---
@@ -29,5 +40,21 @@ spec:
     app: api-gateway
   ports:
     - name: api-gateway
+      port: 8080
+      targetPort: 8080
+
+# Loadbalancer config for direct communication with api-gateway-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-lb-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-gateway
+  ports:
+    - name: api-gateway
+      protocol: TCP
       port: 8080
       targetPort: 8080
