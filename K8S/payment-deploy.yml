@@ -16,6 +16,47 @@ spec:
       containers:
         - name: payment
           image: mohamednawaz/ignite-payment:latest
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: mysql-host
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: mysql-port
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: MYSQL_ROOT_USER
+            - name: MYSQL_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: MYSQL_ROOT_PASSWORD
+            - name: EUREKA_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: eureka-host
+            - name: EUREKA_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: eureka-port
+            - name: API_GW_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: api-gateway-host
+            - name: API_GW_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: api-gateway-port
 
 # Cluster IP config
 ---
