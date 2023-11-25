@@ -45,8 +45,6 @@ oauth:
 logging:
   level:
     com.swivel.ignite.tuition: ${LOG_LEVEL:DEBUG}
-  file:
-    path: ${LOGPATH:D:\Swivel_Projects\Ignite\Project 1\backend\ignite-tuition\logs}
 
 ## Payment-Microservice
 payment:

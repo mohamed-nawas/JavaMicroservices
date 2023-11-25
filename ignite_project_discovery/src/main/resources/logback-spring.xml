@@ -12,7 +12,7 @@
                 <pattern>
                     <pattern>
                         {
-                        "appName": "ignite-auth"
+                        "appName": "ignite-discovery"
                         }
                     </pattern>
                 </pattern>
