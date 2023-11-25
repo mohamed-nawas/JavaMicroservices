@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 # services
 services:
@@ -89,6 +89,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8761:8761
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       ignite:
 
@@ -100,6 +103,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
     environment:
       - EUREKA_HOST=discovery
       - EUREKA_PORT=8761
