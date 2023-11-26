@@ -1,0 +1,14 @@
+# !!! still not tested !!!
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kibana-config-map
+data:
+  kibana.yml: |-
+    server.host: "0.0.0.0"
+    server.shutdownTimeout: "5s"
+    elasticsearch.hosts: [ "http://elasticsearch-clusterip-srv.default.svc.cluster.local:9200" ]
+    monitoring.ui.container.elasticsearch.enabled: true
+    #xpack.security.transport.ssl.enabled: true
+    #xpack.security.http.ssl.enabled: false

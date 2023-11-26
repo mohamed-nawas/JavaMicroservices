@@ -3,6 +3,15 @@ kind: ConfigMap
 metadata:
   name: config-map
 data:
+  # elasticsearch server
+  elasticsearch-url: http://elasticsearch-clusterip-srv.default.svc.cluster.local:9200
+  jvm-options: -Xmx256m -Xms256m
+  discovery-type: single-node
+
+  # logstash server
+  jvm-settings: -Xmx256m -Xms256m
+
+  # mysql server
   mysql-host: mysql-clusterip-srv.default.svc.cluster.local
   mysql-port: "3306"
 

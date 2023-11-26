@@ -1,0 +1,73 @@
+# !!! still not tested !!!
+
+# Kibana server deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: kibana:7.16.1
+          ports:
+            - name: kibana
+              containerPort: 5601
+          env:
+            - name: ELASTICSEARCH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: elasticsearch-url
+          volumeMounts:
+            - name: kibana-yml
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
+      volumes:
+        - name: kibana-yml
+          configMap:
+            name: kibana-config-map
+            items:
+               - key: kibana.yml
+                 path: kibana.yml 
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    # 'kibana-deploy' app pointer
+    app: kibana
+  ports:
+    - name: kibana
+      protocol: TCP
+      port: 5601
+      targetPort: 5601
+
+# NodePort config for connection to kibana UI host browser
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: kibana-np-srv
+# spec:
+#   type: NodePort
+#   selector:
+#     app: kibana
+#   ports:
+#     - name: kibana
+#       protocol: TCP
+#       port: 5601
+#       targetPort: 5601

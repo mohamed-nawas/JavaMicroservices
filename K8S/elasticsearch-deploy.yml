@@ -1,0 +1,75 @@
+# Elasticsearch server deployment config
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch
+          image: elasticsearch:7.16.1
+          ports:
+            - name: es-http-port
+              containerPort: 9200
+            - name: es-binary-port
+              containerPort: 9300
+          env:
+            - name: ES_JAVA_OPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: jvm-options
+            - name: discovery.type
+              valueFrom:
+                configMapKeyRef:
+                  name: config-map
+                  key: discovery-type
+          volumeMounts:
+            - name: elastic-data
+              mountPath: /var/opt/elastic/data
+      volumes:
+        - name: elastic-data
+          persistentVolumeClaim:
+            claimName: elastic-data-pvc
+
+# Defines Persistent volume claim (PVC) storage for elasticsearch server
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elastic-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Mi
+
+# Cluster IP config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    # 'elasticsearch-deploy' app pointer
+    app: elasticsearch
+  ports:
+    - name: es-http-port
+      protocol: TCP
+      port: 9200
+      targetPort: 9200
+    - name: es-binary-port
+      protocol: TCP
+      port: 9300
+      targetPort: 9300
