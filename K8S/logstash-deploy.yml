@@ -19,6 +19,8 @@ spec:
           ports:
             - name: logstash
               containerPort: 9600
+            - name: lgstsh-it-lr
+              containerPort: 5000
           env:
             - name: LS_JAVA_OPTS
               valueFrom:
@@ -36,14 +38,14 @@ spec:
           configMap:
             name: logstash-config-map
             items:
-               - key: logstash.conf
-                 path: logstash.conf
+              - key: logstash.conf
+                path: logstash.conf
         - name: logstash-yml
           configMap:
             name: logstash-config-map
             items:
-               - key: logstash.yml
-                 path: logstash.yml
+              - key: logstash.yml
+                path: logstash.yml
 
 # Cluster IP config
 ---
@@ -57,7 +59,11 @@ spec:
     # 'logstash-deploy' app pointer
     app: logstash
   ports:
-    - name: elogstash
+    - name: logstash
       protocol: TCP
       port: 9600
       targetPort: 9600
+    - name: lgstsh-it-lr
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

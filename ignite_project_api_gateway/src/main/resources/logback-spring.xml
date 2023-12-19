@@ -2,7 +2,12 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- local -->
+        <destination>localhost:5000</destination>
+        <!-- docker -->
         <destination>logstash:5000</destination>
+        <!-- k8s -->
+        <destination>logstash-clusterip-srv.default.svc.cluster.local:5000</destination>
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <mdc />
